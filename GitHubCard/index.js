@@ -1,3 +1,5 @@
+const cardsElement = document.querySelector('.cards')
+const myGithubUserName = 'BkAngel201'
 /*
   STEP 1: using axios, send a GET request to the following URL
     (replacing the placeholder with your Github name):
@@ -27,8 +29,34 @@
     Using that array, iterate over it, requesting data for each user, creating a new card for each
     user, and adding that card to the DOM.
 */
+axios.get(`https://api.github.com/users/${myGithubUserName}`)
+.then(response => {
+  cardsElement.appendChild(cardMaker(response))
+  const followersText = document.createElement('h4')
+  followersText.textContent = `Followers:`
+  cardsElement.appendChild(followersText)
+  return axios.get(`https://api.github.com/users/${response.data.login}/followers`)
+})
+.then(response => {
+  for (const iterator of response.data) {
+    axios.get(`https://api.github.com/users/${iterator.login}`)
+    .then(response => {
+      cardsElement.appendChild(cardMaker(response))
+    })
+  }
+})
 
-const followersArray = [];
+
+
+
+
+// const followersArray = ["tetondan", "dustinmyers", "justsml", "luishrd", "bigknell"];
+// followersArray.forEach((el) => {
+//   axios.get(`https://api.github.com/users/${el}`)
+//   .then(response => {
+//     cardsElement.appendChild(cardMaker(response))
+//   })
+// })
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -49,6 +77,65 @@ const followersArray = [];
       </div>
     </div>
 */
+const cardMaker = (response) => {
+  const card = document.createElement('div')
+  card.classList.add('card')
+
+  const img = document.createElement('img')
+  img.src = response.data.avatar_url
+  card.appendChild(img)
+
+  const cardInfo = document.createElement('div')
+  cardInfo.classList.add('card-info')
+  card.appendChild(cardInfo)
+
+  const headerName = document.createElement('h3')
+  headerName.classList.add('name')
+  headerName.textContent = response.data.name
+  cardInfo.appendChild(headerName)
+
+  const userName = document.createElement('p')
+  userName.classList.add('username')
+  userName.textContent = response.data.login
+  cardInfo.appendChild(userName)
+
+  const userLocation = document.createElement('p')
+  userLocation.textContent = `Location: ${response.data.location}`
+  cardInfo.appendChild(userLocation)
+
+  const userProfile = document.createElement('p')
+  userProfile.textContent = `Profile: `
+  const profileLink = document.createElement('a')
+  profileLink.href = response.data.html_url
+  profileLink.textContent = response.data.html_url
+  userProfile.appendChild(profileLink)
+  cardInfo.appendChild(userProfile)
+
+  const userFollowers = document.createElement('p')
+  userFollowers.textContent = `Followers: ${response.data.followers}`
+  cardInfo.appendChild(userFollowers)
+
+  const userFollowing = document.createElement('p')
+  userFollowing.textContent = `Following: ${response.data.following}`
+  cardInfo.appendChild(userFollowing)
+
+  const userBio = document.createElement('p')
+  userBio.textContent = `Bio: ${response.data.bio}`
+  cardInfo.appendChild(userBio)
+
+  const userContribution = document.createElement('img')
+  userContribution.src = ``
+  userContribution.alt = `Constribution Chart <${response.data.login}>`
+  userContribution.classList.add('contribution')
+  card.appendChild(userContribution)
+
+  const expandBtn = document.createElement('a')
+  expandBtn.textContent = 'Constribution Graph'
+  expandBtn.classList.add('expand-btn')
+  card.appendChild(expandBtn)
+
+  return card
+}
 
 /*
   List of LS Instructors Github username's:
