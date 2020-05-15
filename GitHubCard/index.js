@@ -29,17 +29,17 @@ const myGithubUserName = 'BkAngel201'
     Using that array, iterate over it, requesting data for each user, creating a new card for each
     user, and adding that card to the DOM.
 */
-axios.get(`https://api.github.com/users/${myGithubUserName}`)
+axios.get(`https://cors-anywhere.herokuapp.com/https://api.github.com/users/${myGithubUserName}`)
 .then(response => {
   cardsElement.appendChild(cardMaker(response))
   const followersText = document.createElement('h4')
   followersText.textContent = `Followers:`
   cardsElement.appendChild(followersText)
-  return axios.get(`https://api.github.com/users/${response.data.login}/followers`)
+  return axios.get(`https://cors-anywhere.herokuapp.com/https://api.github.com/users/${response.data.login}/followers`)
 })
 .then(response => {
   for (const iterator of response.data) {
-    axios.get(`https://api.github.com/users/${iterator.login}`)
+    axios.get(`https://cors-anywhere.herokuapp.com/https://api.github.com/users/${iterator.login}`)
     .then(response => {
       cardsElement.appendChild(cardMaker(response))
     })
@@ -124,13 +124,16 @@ const cardMaker = (response) => {
   cardInfo.appendChild(userBio)
 
   const userContribution = document.createElement('img')
-  userContribution.src = ``
+  userContribution.src = `https://ghchart.rshah.org/${response.data.login}`
   userContribution.alt = `Constribution Chart <${response.data.login}>`
   userContribution.classList.add('contribution')
   card.appendChild(userContribution)
 
   const expandBtn = document.createElement('a')
   expandBtn.textContent = 'Constribution Graph'
+  expandBtn.addEventListener('click', event => {
+    card.classList.toggle('expand')
+  })
   expandBtn.classList.add('expand-btn')
   card.appendChild(expandBtn)
 
