@@ -92,13 +92,34 @@ body {
 }
 
 .card {
+  position: relative;
   width: 100%;
   padding: 20px;
   display: flex;
+  flex-wrap: wrap;
   border-radius: 5px;
   box-shadow: 0 1px 6px -2px #000;
   background-color: #FFF;
   margin-bottom: 30px;
+  overflow: hidden;
+  height: 190px;
+}
+
+.card.expand {
+  height: 360px;
+}
+
+.card .contribution {
+  margin-top: 20px;
+  width: 100%;
+}
+
+.card .expand-btn {
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: pointer;
 }
 
 .card img {
@@ -123,5 +144,10 @@ body {
   margin: 3px 0 10px;
 }
 
+h4 {
+  font-size: 3rem;
+  border-bottom: 1px solid #333;
+  margin: 0 0 10px;
+}
 
 
